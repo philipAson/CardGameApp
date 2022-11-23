@@ -8,7 +8,7 @@ val diamonds = "Diamonds"
 val hearts = "Hearts"
 val spades = "Spades"
 
-class Card (val value: Int, val suit: String, val key: Int, var faceUp: Boolean = false) {
+class Card (val value: Int, val suit: String, val key: Int) {
 
-    override fun toString(): String = "$value $suit $key $faceUp"
+    override fun toString(): String = "$value $suit $key"
 }

@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
         images.cardDrawables[firstCard.key]?.let { topOfCardDeckView.setImageResource(it) }
     }
+
     fun drawCard():Card {
         var card = cardDeck.drawCard()
         var image = images.cardDrawables[card.key]
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
         return card
     }
+
     fun guessHigherOnClick() {
         var card = drawCard().value
         // Got to think one step ahead when comparing (The current displayed card is already in the wastePile).
@@ -84,8 +86,13 @@ class MainActivity : AppCompatActivity() {
         }
         textViewUpdater()
     }
+
     fun textViewUpdater() {
         rightAnswerTextView.text = "Wincount: $rightAnswer"
         wrongAnswerTextView.text = "Wrong answers left: $wrongAnswerLeft"
     }
+
+    /*fun winCondition() {
+
+    }*/
 }
