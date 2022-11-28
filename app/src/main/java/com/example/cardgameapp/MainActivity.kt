@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     var rightAnswer = 0
     var wrongAnswerLeft = 3
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,19 +39,27 @@ class MainActivity : AppCompatActivity() {
         rightAnswerTextView = findViewById(R.id.rightCountView)
         wrongAnswerTextView = findViewById(R.id.wrongCountView)
 
+
         textViewUpdater()
 
         val higherButton = findViewById<Button>(R.id.hugherButton)
         val lowerButton = findViewById<Button>(R.id.lowerButton)
+        val rulesButton = findViewById<ImageButton>(R.id.rulesButton)
 
         higherButton.setOnClickListener {
             guessHigherOnClick()
             winCondition()
         }
+
         lowerButton.setOnClickListener {
             guessLowerOnclick()
             winCondition()
         }
+
+        rulesButton.setOnClickListener {
+            rulesFragment()
+        }
+
         images.cardDrawables[firstCard.key]?.let { topOfCardDeckView.setImageResource(it) }
     }
 
@@ -117,5 +127,21 @@ class MainActivity : AppCompatActivity() {
         cardDeck.deckOfCards.shuffle()
         drawCard()
         Log.d("!!!", cardDeck.deckOfCards.size.toString())
+    }
+
+    fun rulesFragment() {
+        val rulesFragment = supportFragmentManager.findFragmentByTag("rulesFragment")
+
+        if (rulesFragment != null) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.remove(rulesFragment)
+            transaction.commit()
+        } else {
+            val rulesFragment = RulesFragment()
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.add(R.id.container, rulesFragment, "rulesFragment")
+            transaction.commit()
+
+        }
     }
 }
