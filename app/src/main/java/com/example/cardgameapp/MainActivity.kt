@@ -1,5 +1,7 @@
 package com.example.cardgameapp
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var wrongAnswerTextView: TextView
 
     private val images = Drawables()
-    private val cardDeck = Deck()
+    private var cardDeck = Deck()
     private var wastePile = mutableListOf<Card>()
 
     var rightAnswer = 0
@@ -42,23 +44,25 @@ class MainActivity : AppCompatActivity() {
 
         higherButton.setOnClickListener {
             guessHigherOnClick()
+            winCondition()
         }
         lowerButton.setOnClickListener {
             guessLowerOnclick()
+            winCondition()
         }
         images.cardDrawables[firstCard.key]?.let { topOfCardDeckView.setImageResource(it) }
     }
 
     fun drawCard():Card {
-        var card = cardDeck.drawCard()
-        var image = images.cardDrawables[card.key]
+        val card = cardDeck.drawCard()
+        val image = images.cardDrawables[card.key]
         wastePile.add(0,card)
 
         if (image != null) {
             topOfCardDeckView.setImageResource(image)
         }
         if (wastePile.size > 1) {
-            var wastePileImage = images.cardDrawables[wastePile[1].key]
+            val wastePileImage = images.cardDrawables[wastePile[1].key]
             if (wastePileImage != null) {
                 topOfWastePileView.setImageResource(wastePileImage)
             }
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun guessHigherOnClick() {
-        var card = drawCard().value
+        val card = drawCard().value
         // Got to think one step ahead when comparing (The current displayed card is already in the wastePile).
         if (card >= wastePile[1].value) {
             rightAnswer++
@@ -77,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         textViewUpdater()
     }
     fun guessLowerOnclick() {
-        var card = drawCard().value
+        val card = drawCard().value
 
         if (card <= wastePile[1].value) {
             rightAnswer++
@@ -87,12 +91,31 @@ class MainActivity : AppCompatActivity() {
         textViewUpdater()
     }
 
+    @SuppressLint("SetTextI18n")
     fun textViewUpdater() {
-        rightAnswerTextView.text = "Wincount: $rightAnswer"
+        rightAnswerTextView.text = "Win-count: $rightAnswer"
         wrongAnswerTextView.text = "Wrong answers left: $wrongAnswerLeft"
     }
 
-    /*fun winCondition() {
+    fun winCondition() {
+        if (rightAnswer >= 12 || wrongAnswerLeft <= 0) {
+            val intent = Intent(this, WinLooseActivity::class.java)
+            intent.putExtra("rightAnswer", rightAnswer)
+            startActivity(intent)
 
-    }*/
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        wastePile.clear()
+        rightAnswer = 0
+        wrongAnswerLeft = 3
+        textViewUpdater()
+        cardDeck.deckOfCards.clear()
+        cardDeck = Deck()
+        cardDeck.deckOfCards.shuffle()
+        drawCard()
+        Log.d("!!!", cardDeck.deckOfCards.size.toString())
+    }
 }
