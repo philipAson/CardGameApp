@@ -48,12 +48,12 @@ class MainActivity : AppCompatActivity() {
 
         higherButton.setOnClickListener {
             guessHigherOnClick()
-            winCondition()
+            winLooseCondition()
         }
 
         lowerButton.setOnClickListener {
             guessLowerOnclick()
-            winCondition()
+            winLooseCondition()
         }
 
         rulesButton.setOnClickListener {
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         wrongAnswerTextView.text = "Wrong answers left: $wrongAnswerLeft"
     }
 
-    fun winCondition() {
+    fun winLooseCondition() {
         if (rightAnswer >= 12 || wrongAnswerLeft <= 0) {
             val intent = Intent(this, WinLooseActivity::class.java)
             intent.putExtra("rightAnswer", rightAnswer)
