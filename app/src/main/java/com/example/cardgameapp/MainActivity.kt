@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private var cardDeck = Deck()
     private var wastePile = mutableListOf<Card>()
 
-    var rightAnswer = 0
+    var rightAnswers = 0
     var wrongAnswerLeft = 3
 
 
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         wrongAnswerTextView = findViewById(R.id.wrongCountView)
 
 
-        textViewUpdater()
+        updateCounterView()
 
         val higherButton = findViewById<Button>(R.id.hugherButton)
         val lowerButton = findViewById<Button>(R.id.lowerButton)
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         images.cardDrawables[firstCard.key]?.let { topOfCardDeckView.setImageResource(it) }
     }
 
-    fun drawCard():Card {
+    private fun drawCard():Card {
         val card = cardDeck.drawCard()
         val image = images.cardDrawables[card.key]
         wastePile.add(0,card)
@@ -80,48 +80,49 @@ class MainActivity : AppCompatActivity() {
         return card
     }
 
-    fun guessHigherOnClick() {
+    private fun guessHigherOnClick() {
         val card = drawCard().value
         // Got to think one step ahead when comparing (The current displayed card is already in the wastePile).
         if (card >= wastePile[1].value) {
-            rightAnswer++
+            rightAnswers++
         } else {
             wrongAnswerLeft--
         }
-        textViewUpdater()
+        updateCounterView()
     }
-    fun guessLowerOnclick() {
+    private fun guessLowerOnclick() {
         val card = drawCard().value
 
         if (card <= wastePile[1].value) {
-            rightAnswer++
+            rightAnswers++
         } else {
             wrongAnswerLeft--
         }
-        textViewUpdater()
+        updateCounterView()
     }
 
     @SuppressLint("SetTextI18n")
-    fun textViewUpdater() {
-        rightAnswerTextView.text = "Win-count: $rightAnswer"
+    fun updateCounterView() {
+        rightAnswerTextView.text = "Win-count: $rightAnswers"
         wrongAnswerTextView.text = "Wrong answers left: $wrongAnswerLeft"
     }
 
-    fun winLooseCondition() {
-        if (rightAnswer >= 12 || wrongAnswerLeft <= 0) {
-            val intent = Intent(this, WinLooseActivity::class.java)
-            intent.putExtra("rightAnswer", rightAnswer)
-            startActivity(intent)
+    private fun winLooseCondition() {
+        if (rightAnswers >= 12 || wrongAnswerLeft <= 0) {
 
+            val intent = Intent(this, WinLooseActivity::class.java)
+                intent.putExtra("rightAnswer", rightAnswers)
+
+                startActivity(intent)
         }
     }
 
     override fun onResume() {
         super.onResume()
         wastePile.clear()
-        rightAnswer = 0
+        rightAnswers = 0
         wrongAnswerLeft = 3
-        textViewUpdater()
+        updateCounterView()
         cardDeck.deckOfCards.clear()
         cardDeck = Deck()
         cardDeck.deckOfCards.shuffle()
@@ -129,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("!!!", cardDeck.deckOfCards.size.toString())
     }
 
-    fun rulesFragment() {
+    private fun rulesFragment() {
         val rulesFragment = supportFragmentManager.findFragmentByTag("rulesFragment")
 
         if (rulesFragment != null) {
@@ -141,7 +142,6 @@ class MainActivity : AppCompatActivity() {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.add(R.id.container, rulesFragment, "rulesFragment")
             transaction.commit()
-
         }
     }
 }

@@ -1,10 +1,13 @@
 package com.example.cardgameapp
+
+import android.os.Parcel
+import android.os.Parcelable
+
 // Attributes Deck Class.
 
 // 1 Generate a Deck of (Card)'s [Array<Card>] with 52 cards 1->13 x 4.
 // 3 Draw a Card from the Deck.
-
-class Deck {
+class Deck (){
     // Anonymous function.
 
     // gets its index from Array position
@@ -35,4 +38,5 @@ class Deck {
     fun drawCard(): Card {
         return deckOfCards.removeAt(0)
     }
+
 }
